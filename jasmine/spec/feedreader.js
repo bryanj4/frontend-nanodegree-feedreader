@@ -36,10 +36,11 @@ $(function() {
         it('are URLs defined', function () {
             var isFull = true;
             allFeeds.forEach(function(item) {
-                if(item.url === "")
-                    isFull = false;
+                expect(item.url).toBeDefined();
+                expect(item.url).not.toBe("");
+
             });
-            expect(isFull).toBe(true);
+
         });
 
         /* DONE: Write a test that loops through each feed
@@ -48,11 +49,10 @@ $(function() {
          */
         it('are Names defined', function () {
             var isFull = true;
-            allFeeds.forEach(function(item,index,array) {
-                if(item.name === "")
-                    isFull = false;
+            allFeeds.forEach(function(item) {
+                expect(item.name).toBeDefined();
+                expect(item.name).not.toBe("");
             });
-            expect(isFull).toBe(true);
         });
     });
 
@@ -83,14 +83,14 @@ $(function() {
          /* Used the jquery function .click() to simulate a click on the menu
                 icon to see what the changed state would be and if menu-hidden
                 is a class for the body then the slide bar isn't seen*/
-        it('Visibility of Menu Icon', function () {
+        it('toggles visibility when menu icon is clicked', function () {
             var menu1, menu2;
             menuIcon.click();
             menu1 = $('body').hasClass('menu-hidden');
             menuIcon.click();
             menu2 = $('body').hasClass('menu-hidden');
-            expect(menu1).toBe(false);
-            expect(menu2).toBe(true);
+            expect(menu1).toBeFalsy();
+            expect(menu2).toBeTruthy();
         });
     });
 
@@ -102,9 +102,9 @@ $(function() {
         beforeEach(function (done) {
             //Something
             loadFeed(0, function (status, entries) {
-                if (status === "success" && entries.length > 0) {
+                if (status === "success" && $(".feed").find(".entry").length > 0) {
                     success = true;
-                    feedLoad0 = entries;
+                    feedLoad0 = $(".feed").find('.entry')[0].innerHTML;
                 } else {
                     success = false;
                 }
@@ -120,8 +120,9 @@ $(function() {
          /* I pass in the status and entries into the callback function
                 and iff the status is a success and there are entries then
                 the test is passed */
-        it('they loaded', function (done) {
+        it('loaded and populated the .entry container', function (done) {
             expect(success).toBe(true);
+            expect(feedLoad0).not.toEqual("");
             done();
         });
     });
@@ -132,9 +133,9 @@ $(function() {
         beforeEach(function (done) {
             //Something
             loadFeed(1, function (status, entries) {
-                if(status === "success" && entries.length > 0) {
+                if(status === "success" && $(".feed").find(".entry").length > 0) {
                     success = true;
-                    feedLoad1 = entries;
+                    feedLoad1 = $(".feed").find('.entry')[0].innerHTML;
                 } else {
                     success = false;
                 }
@@ -148,10 +149,10 @@ $(function() {
                 then I had to make sure the previous test 'New Feed Selection
                 worked so feedLoad0 had to be defined and finally I had to make
                 sure they were different'*/
-        it('new feed loads', function (done) {
+        it('loads and replaces prior feed', function (done) {
             expect(success).toBe(true);
             expect(feedLoad0).not.toBe("");
-            expect(feedLoad1).not.toBe(feedLoad0);
+            expect(feedLoad1).not.toEqual(feedLoad0);
             done();
         });
     });
