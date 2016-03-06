@@ -149,7 +149,7 @@ $(function() {
                     });
                 } else {
                     success0 = false;
-                    done()
+                    done();
                 }
 
             });
