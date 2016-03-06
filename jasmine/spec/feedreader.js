@@ -13,8 +13,6 @@ $(function() {
     * a related set of tests. This suite is all about the RSS
     * feeds definitions, the allFeeds variable in our application.
     */
-    var feedLoad0 = "";
-    var feedLoad1;
     describe('RSS Feeds', function() {
         /* This is our first test - it tests to make sure that the
          * allFeeds variable has been defined and that it is not
@@ -98,7 +96,7 @@ $(function() {
 
     /* DONE: Write a new test suite named "Initial Entries" */
     describe("Initial Entries", function () {
-        var success = false;
+        var success = false, feedLoad0 = "";
         beforeEach(function (done) {
             //Something
             loadFeed(0, function (status, entries) {
@@ -128,18 +126,32 @@ $(function() {
     });
     /* DONE: Write a new test suite named "New Feed Selection"*/
     describe('New Feed Selection', function () {
-        var success = false,
-            entries = '';
+        var success0 = false,
+            success1 = false,
+            entries = '',
+            feedLoad0 = '',
+            feedLoad1 = '';
         beforeEach(function (done) {
             //Something
-            loadFeed(1, function (status, entries) {
+            loadFeed(0, function (status, entries) {
                 if(status === "success" && $(".feed").find(".entry").length > 0) {
-                    success = true;
-                    feedLoad1 = $(".feed").find('.entry')[0].innerHTML;
+                    success0 = true;
+                    feedLoad0 = $(".feed").find('.entry')[0].innerHTML;
+                    loadFeed(1,function (status, entries){
+                      if(status === "success" && $(".feed").find(".entry").length > 0) {
+                        success1 = true;
+                        feedLoad1 = $(".feed").find('.entry')[0].innerHTML;
+                      } else {
+                        success1 = false;
+                        feedLoad1 = feedLoad0;
+                      }
+                      done();
+                    });
                 } else {
-                    success = false;
+                    success0 = false;
+                    done()
                 }
-                done();
+
             });
         });
         /* DONE: Write a test that ensures when a new feed is loaded
@@ -150,8 +162,8 @@ $(function() {
                 worked so feedLoad0 had to be defined and finally I had to make
                 sure they were different'*/
         it('loads and replaces prior feed', function (done) {
-            expect(success).toBe(true);
-            expect(feedLoad0).not.toBe("");
+            expect(success0).toBeTruthy();
+            expect(success1).toBeTruthy();
             expect(feedLoad1).not.toEqual(feedLoad0);
             done();
         });
