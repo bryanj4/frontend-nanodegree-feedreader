@@ -70,13 +70,13 @@ function init() {
                  });
 
                  if (cb) {
-                     cb();
+                     cb(status,entries);
                  }
                },
        error: function (result, status, err){
                  //run only the callback without attempting to parse result due to error
                  if (cb) {
-                     cb();
+                     cb(status, '');
                  }
                },
        dataType: "json"
